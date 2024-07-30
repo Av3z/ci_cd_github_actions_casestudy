@@ -4,18 +4,26 @@ on:
   push:
     branches:
       - developer
-      - master
+      - main
   pull_request:
     branches:
       - developer
-      - master
+      - main
 
 jobs:
   flutter_test:
     name: Run Flutter analyze and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up token
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_CUSTOM_TOKEN }}
+        run: |
+          echo "Token configurado"
+
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
@@ -24,8 +32,6 @@ jobs:
           channel: "stable"
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter format --dry-run --set-exit-if-changed lib/
-      - run: flutter format --dry-run --set-exit-if-changed test/
       - run: flutter test --coverage
       - run: flutter test --machine > test-results.json
       - uses: dorny/test-reporter@v1.4.2

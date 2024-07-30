@@ -15,7 +15,15 @@ jobs:
     name: Run Flutter analyze and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Set up token
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_CUSTOM_TOKEN }}
+        run: |
+          echo "Token configurado"
+
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
